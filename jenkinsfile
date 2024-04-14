@@ -1,52 +1,50 @@
-
-pipeline{
-  agent any
-   
-   
-  stages {
-
-  stage('Install dependencies') {
-      steps{
-        
-        script {
- sh 'npm cache clean --force'
-         sh  'npm install --force'
+pipeline {
+    agent any
+    environment {
+        registryCredentials = "nexus"
+        registry = "192.168.33.10:8083"
+    }
+    stages {
+        stage('Install dependencies') {
+            steps {
+                script {
+                    sh 'npm install'
+                }
+            }
         }
-      }
-    }
-
-
- 
- 
-
- stage('Build application') {
-       steps{
-        
-         script {
-    
-          sh('npm run build')
-         }
-       }
-     }
-
-     stage('Deploy nexus ') { 
-       steps{
-        
-         script {
-       sh('npm run deploy ')
+                
+                stage('Build application') {
+                    steps {
+                        script {
+                            sh 'ng build'
+                        }
+                    }
+                }
+                stage('Building image') {
+                    steps {
+                        script {
+                            sh('docker-compose build')
+                        }
+                    }
+                }
+        stage('Deploy to Nexus') {
+            steps {
+                script {
+                    docker.withRegistry("http://"+registry, registryCredentials) {
+                        sh('docker push 192.168.33.10:8083/4twin1-g2-projetfinal-front:1.0')
+                    }
+                }
+            }
         }
-       }
+        stage('Run application') {
+            steps {
+                script {
+                    docker.withRegistry("http://" + registry, registryCredentials) {
+                        sh('docker pull 192.168.33.10:8083/4twin1-g2-projetfinal-front:1.0')
+                        sh('docker-compose up -d')
+                    }
+                }
+            }
+        }
     }
-     stage('build image docker  ') { 
-      steps{
-        
-        script {
-         sh('docker build . ')
-        } 
-      }
-    }
-
-   
-  } 
-
 }
