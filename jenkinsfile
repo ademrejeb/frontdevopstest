@@ -52,18 +52,7 @@ tools{
       }
     }
 
-    stage('Push to DockerHub') {
-            steps {
-               script {
-            // Login to DockerHub
-            sh 'docker login -u meryemmriri -p mimomimi99'
-
-           
-            // Push the Docker image to DockerHub
-            sh 'docker push meryemmriri/meriemmriri-4twin1-g2-projetfinalfront:1.0'
-        }
-            }
-        }
+   
   } 
 
 }
