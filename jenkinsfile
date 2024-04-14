@@ -1,0 +1,69 @@
+
+pipeline{
+  agent any
+   
+
+tools{
+
+    nodejs 'node'
+   }
+ 
+   
+  stages {
+
+  stage('Install dependencies') {
+      steps{
+        
+        script {
+
+         sh('npm install')
+        }
+      }
+    }
+
+
+ 
+ 
+
+ stage('Build application') {
+       steps{
+        
+         script {
+    
+          sh('npm run build')
+         }
+       }
+     }
+
+     stage('Deploy nexus ') { 
+       steps{
+        
+         script {
+       sh('npm run deploy ')
+        }
+       }
+    }
+     stage('build image docker  ') { 
+      steps{
+        
+        script {
+         sh('docker build -t meryemmriri/meriemmriri-4twin1-g2-projetfinalfront:1.0 . ')
+        } 
+      }
+    }
+
+    stage('Push to DockerHub') {
+            steps {
+               script {
+            // Login to DockerHub
+            sh 'docker login -u meryemmriri -p mimomimi99'
+
+           
+            // Push the Docker image to DockerHub
+            sh 'docker push meryemmriri/meriemmriri-4twin1-g2-projetfinalfront:1.0'
+        }
+            }
+        }
+  } 
+
+}
