@@ -9,7 +9,7 @@ pipeline{
       steps{
         
         script {
-
+ sh 'npm cache clean --force'
          sh('npm install --force')
         }
       }
