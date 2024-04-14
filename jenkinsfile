@@ -47,7 +47,7 @@ tools{
       steps{
         
         script {
-         sh('docker build -t meryemmriri/meriemmriri-4twin1-g2-projetfinalfront:1.0 . ')
+         sh('docker build . ')
         } 
       }
     }
